@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>TBR Book App</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    #results { display: grid; gap: 10px; }
+    .book { border: 1px solid #ccc; padding: 10px; }
+  </style>
+</head>
+<body>
+  <h1>TBR Book App</h1>
+  <input type="text" id="search" placeholder="Search for a book...">
+  <button onclick="searchBooks()">Search</button>
+  <div id="results"></div>
+
+  <script>
+    async function searchBooks() {
+      const query = document.getElementById('search').value;
+      const url = `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(query)}`;
+      const resultsDiv = document.getElementById('results');
+      resultsDiv.innerHTML = 'Loading...';
+
+      try {
+        const response = await fetch(url);
+        const data = await response.json();
+        resultsDiv.innerHTML = '';
+
+        if (data.items) {
+          data.items.forEach(book => {
+            const title = book.volumeInfo.title;
+            const authors = book.volumeInfo.authors?.join(', ') || 'Unknown';
+            const div = document.createElement('div');
+            div.className = 'book';
+            div.innerHTML = `<strong>${title}</strong> by ${authors}
+                             <button onclick="addToTBR('${title}')">Add to TBR</button>`;
+            resultsDiv.appendChild(div);
+          });
+        } else {
+          resultsDiv.innerHTML = 'No results found.';
+        }
+      } catch (error) {
+        resultsDiv.innerHTML = 'Error fetching books.';
+        console.error(error);
+      }
+    }
+
+    function addToTBR(title) {
+      let tbrList = JSON.parse(localStorage.getItem('tbrList')) || [];
+      tbrList.push(title);
+      localStorage.setItem('tbrList', JSON.stringify(tbrList));
+      alert(`${title} added to your TBR list!`);
+    }
+  </script>
+</body>
+</html>
