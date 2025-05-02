@@ -1,2 +1,4 @@
 # Personal-Projects
-My first personal project will be a TBR (To Be Read) Book application. You will be able to search and add books to your own personalized list. This will be done with HTML, CSS and JavaScript.
+1. TBR App - An app that lets you build your own personal library
+2. Digital Clock - A basic digital clock I created just to practice JavaScript
+3. Pokemon sprites!
